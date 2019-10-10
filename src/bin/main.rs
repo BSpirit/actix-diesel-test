@@ -1,6 +1,14 @@
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use ::web::models::{User, NewUser};
 use ::web::establish_connection;
+use askama::Template;
+
+
+#[derive(Template)]
+#[template(path = "users.html")]
+struct UsersTemplate {
+    users: Vec<User>,
+}
 
 
 fn create() -> impl Responder {
@@ -12,10 +20,8 @@ fn create() -> impl Responder {
 fn list() -> impl Responder {
     let connection = establish_connection();
     let users = User::list(&connection);
-    for user in &users {
-        println!("{}", user.username);
-    }
-    HttpResponse::Ok().body("Check your terminal")
+    let t = UsersTemplate{users: users}.render().unwrap();
+    HttpResponse::Ok().content_type("text/html").body(t)
 }
 
 fn main() {

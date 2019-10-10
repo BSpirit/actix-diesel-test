@@ -29,4 +29,3 @@ impl User {
                     .expect("Error loading users")
     }
 }
-
