@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if created -%}
+        <p>User was created</p>
+    {% else -%}
+        <form action=/create method=POST>
+            <label>
+                Username:
+                <input name="username">
+            </label>
+            <button type=submit>Submit form</button>
+        </form>
+    {% endif -%}
+{% endblock %}

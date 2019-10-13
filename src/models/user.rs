@@ -1,8 +1,9 @@
 use crate::schema::users;
+use crate::models::product::Product;
 use diesel::prelude::*;
 
 
-#[derive(Queryable)]
+#[derive(Identifiable, Queryable)]
 pub struct User {
     pub id: i32,
     pub username: String,
@@ -15,16 +16,26 @@ pub struct NewUser<'a> {
 }
 
 impl<'a> NewUser<'a> {
-    pub fn create(&self, connection: &SqliteConnection) -> QueryResult<usize> {
+    pub fn create(&self, connection: &SqliteConnection) -> Result<User, diesel::result::Error> {
         diesel::insert_into(users::table)
             .values(self)
-            .execute(connection)
+            .execute(connection)?;
+
+        users::table.order(users::id.desc()).first(connection)
     }
 }
 
 impl User {
     pub fn get(id: &i32, connection: &SqliteConnection) -> Result<User, diesel::result::Error> {
         users::table.find(id).first(connection)
+
+    }
+
+    pub fn get_with_products(id: &i32, connection: &SqliteConnection) -> Result<(User, Vec<Product>), diesel::result::Error> {
+        let user = users::table.find(id).first::<User>(connection)?;
+        let products = Product::belonging_to(&user).load::<Product>(connection)?;
+
+        Ok((user, products))
     }
 
     pub fn delete(id: &i32, connection: &SqliteConnection) -> Result<(), diesel::result::Error> {
