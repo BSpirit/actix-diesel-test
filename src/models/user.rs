@@ -32,7 +32,7 @@ impl User {
     }
 
     pub fn get_with_products(id: &i32, connection: &SqliteConnection) -> Result<(User, Vec<Product>), diesel::result::Error> {
-        let user = users::table.find(id).first::<User>(connection)?;
+        let user: User = users::table.find(id).first(connection)?;
         let products = Product::belonging_to(&user).load::<Product>(connection)?;
 
         Ok((user, products))

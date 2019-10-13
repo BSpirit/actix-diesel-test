@@ -19,10 +19,12 @@ pub struct NewProduct<'a> {
 }
 
 impl<'a> NewProduct<'a> {
-    pub fn create(&self, connection: &SqliteConnection) -> QueryResult<usize> {
+    pub fn create(&self, connection: &SqliteConnection) -> Result<Product, diesel::result::Error> {
         diesel::insert_into(products::table)
             .values(self)
-            .execute(connection)
+            .execute(connection)?;
+
+        products::table.order(products::id.desc()).first(connection)
     }
 }
 
