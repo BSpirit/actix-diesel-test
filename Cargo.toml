@@ -8,6 +8,7 @@ edition = "2018"
 
 [dependencies]
 actix-web = "1.0"
+actix-files = "0.1"
 diesel = { version = "1.0.0", features = ["sqlite", "r2d2"] }
 askama = { version = "0.8", features = ["with-actix-web"] }
 serde = "1.0"

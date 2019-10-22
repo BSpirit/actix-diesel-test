@@ -1,3 +1,4 @@
+use actix_files as fs;
 use actix_web::{web, App, HttpServer};
 use ::web::db_connection::establish_connection;
 use ::web::handlers::user::{index, create, detail, list};
@@ -7,6 +8,7 @@ fn main() {
     HttpServer::new(|| {
         App::new()
             .data(establish_connection())
+            .service(fs::Files::new("/static", "./static"))
             .route("/", web::get().to(index))
             .route("/create", web::post().to(create))
             .route("/users/{id}", web::get().to(detail))
