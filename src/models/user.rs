@@ -6,16 +6,21 @@ use diesel::prelude::*;
 #[derive(Identifiable, Queryable)]
 pub struct User {
     pub id: i32,
+    pub username: Option<String>,
+}
+
+#[derive(Insertable, AsChangeset, Deserialize, Debug)]
+#[table_name = "users"]
+pub struct NewUser {
+    pub username: Option<String>,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct UserForm {
     pub username: String,
 }
 
-#[derive(Insertable, AsChangeset)]
-#[table_name = "users"]
-pub struct NewUser<'a> {
-    pub username: &'a str,
-}
-
-impl<'a> NewUser<'a> {
+impl NewUser {
     pub fn create(&self, connection: &SqliteConnection) -> Result<User, diesel::result::Error> {
         diesel::insert_into(users::table)
             .values(self)

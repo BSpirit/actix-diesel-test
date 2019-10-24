@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>{{ user.username }}</h1>
+    <h1>{% match user.username %}
+        {% when Some with (username) %}
+          {{username}}
+        {% when None %}
+          None
+      {% endmatch %}</h1>
     <ul>
         {% for product in products %}
             <li>{{ product.name }}</li>
