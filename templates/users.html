@@ -3,7 +3,7 @@
 {% block content %}
     <h1>Users</h1>
     <ul>
-        <li>{% for user in users %}
+        <li class="red">{% for user in users %}
             {% match user.username %}
                 {% when Some with (username) %}
                   {{username}}

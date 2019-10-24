@@ -2,8 +2,6 @@
 extern crate diesel;
 #[macro_use]
 extern crate serde;
-extern crate askama;
-extern crate dotenv;
 
 pub mod models;
 pub mod schema;
