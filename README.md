@@ -51,6 +51,11 @@ Remove container using docker-compose
 docker-compose down
 ```
 
+Rebuild container using docker-compose
+```
+docker-compose build --no-cache
+```
+
 Build docker image using given Dockerfile
 ```
 docker build -t actix-diesel-test .
