@@ -11,6 +11,7 @@ actix-web = "1.0"
 actix-files = "0.1"
 diesel = { version = "1.0.0", features = ["sqlite", "r2d2"] }
 askama = { version = "0.8", features = ["with-actix-web"] }
+libsqlite3-sys = { version = "*", features = ["bundled"] }
 dotenv = "0.10"
 serde = "1.0"
 csv = "1.1"

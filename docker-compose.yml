@@ -1,0 +1,9 @@
+version: '3'
+services:
+  actix-diesel-test:
+    build: .
+    volumes:
+      - "./db/tmp.db:/app/db/tmp.db"
+    ports:
+      - "8088:8088"
+

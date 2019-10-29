@@ -5,6 +5,7 @@ use ::web::handlers::user::{index, create, detail, list};
 
 
 fn main() {
+    println!("Server is listening...");
     HttpServer::new(|| {
         App::new()
             .data(init_pool())
@@ -14,7 +15,7 @@ fn main() {
             .route("/users/{id}", web::get().to(detail))
             .route("/list", web::get().to(list))
     })
-    .bind("127.0.0.1:8088")
+    .bind("0.0.0.0:8088")
     .unwrap()
     .run()
     .unwrap();
