@@ -3,13 +3,14 @@
 {% block content %}
     <h1>Users</h1>
     <ul>
-        <li class="red">{% for user in users %}
+        {% for user in users %}
+        <li class="red">
             {% match user.username %}
                 {% when Some with (username) %}
                   {{username}}
                 {% when None %}
                   None
-              {% endmatch %} - {{user.id}}
-        {% endfor %}</li>
+            {% endmatch %} - {{user.id}} </li>
+        {% endfor %}
     </ul>
 {% endblock %}

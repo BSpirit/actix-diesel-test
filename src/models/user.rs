@@ -9,15 +9,10 @@ pub struct User {
     pub username: Option<String>,
 }
 
-#[derive(Insertable, AsChangeset, Deserialize, Debug)]
+#[derive(Insertable, AsChangeset, Serialize, Deserialize, Debug)]
 #[table_name = "users"]
 pub struct NewUser {
     pub username: Option<String>,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct UserForm {
-    pub username: String,
 }
 
 impl NewUser {

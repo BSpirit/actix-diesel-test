@@ -1,31 +1,31 @@
 use actix_web::{web, HttpResponse, Responder};
 use askama::Template;
 use crate::db_connection::SqlitePool;
-use crate::models::user::{User, NewUser, UserForm};
+use crate::models::user::{User, NewUser};
 use crate::models::product::NewProduct;
 use crate::templates::user::{UserTemplate, UsersTemplate, AddUserTemplate};
 use crate::handlers::pool_handler::pool_handler;
 use std::fs::File;
-use crate::check_string;
 
-
-pub fn index() -> impl Responder {
-    File::open("data.csv").map(|file| {
-        let mut rdr = csv::Reader::from_reader(file);
-        for result in rdr.deserialize() {
-            let record: NewUser = result.expect("not working");
-            println!("{:?}", record);
-        }
-    });
-
+// Return type cannot be infered because E type is not returned explicitly => cannot use impl Responder
+pub fn index(pool: web::Data<SqlitePool>) -> Result<HttpResponse, HttpResponse> {
+    let sqlite_pool = pool_handler(pool)?;
+    File::open("data.csv")
+        .map(|file| {
+            let mut rdr = csv::Reader::from_reader(file);
+            for result in rdr.deserialize() {
+                let user: NewUser = result.expect("not working");
+                user.create(&sqlite_pool).expect("not working");
+            }
+        });
 
     let t = AddUserTemplate{created: false}.render().unwrap();
-    HttpResponse::Ok().content_type("text/html").body(t)
+    Ok(HttpResponse::Ok().content_type("text/html").body(t))
 }
 
-pub fn create(pool: web::Data<SqlitePool>, params: web::Form<UserForm>) -> impl Responder {
+pub fn create(pool: web::Data<SqlitePool>, user: web::Form<NewUser>) -> impl Responder {
     let sqlite_pool = pool_handler(pool)?;
-    NewUser{username: check_string(params.username.clone())}.create(&sqlite_pool)
+    user.create(&sqlite_pool)
         .map(|user| {
             NewProduct{name: "Gameboy", user_id: Some(user.id)}.create(&sqlite_pool).expect("No product created");
             NewProduct{name: "PS4", user_id: Some(user.id)}.create(&sqlite_pool).expect("No product created");
